@@ -110,8 +110,8 @@ struct SystemMonitorSection: View {
             
             // 网络
             NetworkCard(
-                upload: SystemMonitor.formatBytes(systemMonitor.uploadSpeed),
-                download: SystemMonitor.formatBytes(systemMonitor.downloadSpeed)
+                upload: SystemMonitor.formatSpeed(systemMonitor.uploadSpeed),
+                download: SystemMonitor.formatSpeed(systemMonitor.downloadSpeed)
             )
         }
     }
@@ -330,7 +330,7 @@ struct EmptyAppsView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("支持检测：Ollama、LM Studio、ChatGPT 等")
+                Text("支持检测：Ollama、LM Studio、ChatGPT、QoderWork 等")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

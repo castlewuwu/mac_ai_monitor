@@ -1,5 +1,19 @@
 # AI Monitor - 更新日志
 
+## v1.1.1 (2026-10-19)
+
+### Bug 修复
+- 🔧 修复 Playgrounds 版本的并发错误："'async' call in a function that does not support concurrency"
+- 🔧 将 SystemMonitor 和 AIAppMonitor 从 async/await 改为 Timer + DispatchQueue.main.async
+- 🔧 修复网络速度计算，现在正确显示实时速度
+
+### 技术改进
+- 使用传统 Timer 替代 Task，避免并发问题
+- 使用 DispatchQueue.main.async 更新 UI，确保线程安全
+- 优化内存管理，正确处理 weak self
+
+---
+
 ## v1.1.0 (2026-10-19)
 
 ### 新增功能
@@ -44,4 +58,4 @@
 ---
 
 **更新人**: 噬金虫 🪲  
-**更新时间**: 2026-10-19 19:15 GMT+8
+**最新更新时间**: 2026-10-19 19:30 GMT+8

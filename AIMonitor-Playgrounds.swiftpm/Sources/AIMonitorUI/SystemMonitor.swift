@@ -2,7 +2,6 @@ import Foundation
 import Combine
 import Darwin
 
-@MainActor
 class SystemMonitor: ObservableObject {
     @Published var cpuUsage: Double = 0.0
     @Published var memoryUsed: UInt64 = 0
@@ -11,32 +10,31 @@ class SystemMonitor: ObservableObject {
     @Published var uploadSpeed: UInt64 = 0
     @Published var downloadSpeed: UInt64 = 0
     
-    private var updateTask: Task<Void, Never>?
+    private var timer: Timer?
+    private var previousUpload: UInt64 = 0
+    private var previousDownload: UInt64 = 0
+    private var previousTime: Date = Date()
     
-    nonisolated init() {}
+    init() {}
     
     func startMonitoring() {
-        updateTask = Task { [weak self] in
-            while !Task.isCancelled {
-                await self?.updateMetrics()
-                try? await Task.sleep(nanoseconds: 1_000_000_000) // 1秒
-            }
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateMetrics()
         }
     }
     
     func stopMonitoring() {
-        updateTask?.cancel()
+        timer?.invalidate()
+        timer = nil
     }
     
-    private func updateMetrics() async {
-        await withTaskGroup(of: Void.self) { group in
-            group.addTask { await self.updateCPUUsage() }
-            group.addTask { await self.updateMemoryUsage() }
-            group.addTask { await self.updateNetworkSpeed() }
-        }
+    private func updateMetrics() {
+        updateCPUUsage()
+        updateMemoryUsage()
+        updateNetworkSpeed()
     }
     
-    private func updateCPUUsage() async {
+    private func updateCPUUsage() {
         var cpuInfo: host_cpu_load_info?
         var count = mach_msg_type_number_t(
             MemoryLayout<host_cpu_load_info>.size / MemoryLayout<integer_t>.size
@@ -57,13 +55,13 @@ class SystemMonitor: ObservableObject {
             let total = user + system + idle + nice
             let used = user + system + nice
             
-            await MainActor.run {
+            DispatchQueue.main.async {
                 self.cpuUsage = (used / total) * 100.0
             }
         }
     }
     
-    private func updateMemoryUsage() async {
+    private func updateMemoryUsage() {
         var stats = vm_statistics64()
         var count = mach_msg_type_number_t(
             MemoryLayout<vm_statistics64>.size / MemoryLayout<integer_t>.size
@@ -83,7 +81,7 @@ class SystemMonitor: ObservableObject {
             var size = MemoryLayout<UInt64>.size
             sysctlbyname("hw.memsize", &totalBytes, &size, nil, 0)
             
-            await MainActor.run {
+            DispatchQueue.main.async {
                 self.memoryUsed = used
                 self.memoryTotal = totalBytes
                 self.memoryPercentage = totalBytes > 0 ? Double(used) / Double(totalBytes) * 100.0 : 0.0
@@ -91,7 +89,7 @@ class SystemMonitor: ObservableObject {
         }
     }
     
-    private func updateNetworkSpeed() async {
+    private func updateNetworkSpeed() {
         var interfaceAddresses: UnsafeMutablePointer<ifaddrs>?
         getifaddrs(&interfaceAddresses)
         
@@ -113,11 +111,23 @@ class SystemMonitor: ObservableObject {
         
         freeifaddrs(interfaceAddresses)
         
-        // 计算速度（简化版）
-        await MainActor.run {
-            self.uploadSpeed = currentUpload
-            self.downloadSpeed = currentDownload
+        // 计算速度
+        let currentTime = Date()
+        let elapsed = currentTime.timeIntervalSince(previousTime)
+        
+        if elapsed > 0 {
+            let uploadDelta = currentUpload > previousUpload ? currentUpload - previousUpload : 0
+            let downloadDelta = currentDownload > previousDownload ? currentDownload - previousDownload : 0
+            
+            DispatchQueue.main.async {
+                self.uploadSpeed = UInt64(Double(uploadDelta) / elapsed)
+                self.downloadSpeed = UInt64(Double(downloadDelta) / elapsed)
+            }
         }
+        
+        previousUpload = currentUpload
+        previousDownload = currentDownload
+        previousTime = currentTime
     }
     
     static func formatBytes(_ bytes: UInt64) -> String {

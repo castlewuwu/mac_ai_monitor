@@ -18,11 +18,10 @@ struct AIAppInfo: Identifiable {
     var status: AIAppStatus
 }
 
-@MainActor
 class AIAppMonitor: ObservableObject {
     @Published var detectedApps: [AIAppInfo] = []
     
-    private var updateTask: Task<Void, Never>?
+    private var timer: Timer?
     
     private let knownAIApps: [String: String] = [
         "com.ollama.ollama": "Ollama",
@@ -37,23 +36,21 @@ class AIAppMonitor: ObservableObject {
         "com.qoder.app": "Qoder"
     ]
     
-    nonisolated init() {}
+    init() {}
     
     func startMonitoring() {
         scanForAIApps()
-        updateTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 5_000_000_000) // 5秒
-                await self?.scanForAIApps()
-            }
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            self?.scanForAIApps()
         }
     }
     
     func stopMonitoring() {
-        updateTask?.cancel()
+        timer?.invalidate()
+        timer = nil
     }
     
-    private func scanForAIApps() async {
+    private func scanForAIApps() {
         let runningApps = NSWorkspace.shared.runningApplications
         var detected: [AIAppInfo] = []
         
@@ -71,7 +68,7 @@ class AIAppMonitor: ObservableObject {
             detected.append(appInfo)
         }
         
-        await MainActor.run {
+        DispatchQueue.main.async {
             self.detectedApps = detected
         }
     }
