@@ -1,5 +1,21 @@
 # AI Monitor - 更新日志
 
+## v1.1.2 (2026-10-19)
+
+### Bug 修复
+- 🔧 **修复 Xcode 项目无法启动问题**
+  - 删除错误的 main.swift 入口
+  - 新增 AI_MonitorApp.swift（使用 @main 标记）
+  - 更新 AppDelegate.swift（使用 @NSApplicationDelegateAdaptor）
+  - 修复"doesn't contain an executable"错误
+
+### 技术改进
+- 使用 SwiftUI App 协议作为应用入口
+- 正确配置菜单栏应用生命周期
+- 添加 XCODE_FIX_GUIDE.md 文档
+
+---
+
 ## v1.1.1 (2026-10-19)
 
 ### Bug 修复
@@ -58,4 +74,4 @@
 ---
 
 **更新人**: 噬金虫 🪲  
-**最新更新时间**: 2026-10-19 19:30 GMT+8
+**最新更新时间**: 2026-10-19 19:35 GMT+8

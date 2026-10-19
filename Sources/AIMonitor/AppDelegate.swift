@@ -51,6 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 停止监控
         systemMonitor.stopMonitoring()
         aiAppMonitor.stopMonitoring()
+        alertEngine.stopMonitoring()
     }
     
     // MARK: - Status Bar
