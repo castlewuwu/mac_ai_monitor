@@ -31,7 +31,10 @@ class AIAppMonitor: ObservableObject {
         "com.anthropic.claude": "Claude",
         "com.whisper.whisper": "Whisper",
         "org.pytorch.pytorch": "PyTorch",
-        "org.tensorflow.tensorflow": "TensorFlow"
+        "org.tensorflow.tensorflow": "TensorFlow",
+        // QoderWork 和 Qoder AI 编程助手
+        "com.qoderwork.app": "QoderWork",
+        "com.qoder.app": "Qoder"
     ]
     
     nonisolated init() {}

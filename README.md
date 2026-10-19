@@ -28,6 +28,7 @@
 | 训练任务 | PyTorch, TensorFlow, JAX |
 | 图像生成 | Stable Diffusion WebUI, ComfyUI |
 | 云服务客户端 | ChatGPT App, Claude App |
+| AI 编程助手 | **QoderWork**, **Qoder** |
 
 ## 技术栈
 

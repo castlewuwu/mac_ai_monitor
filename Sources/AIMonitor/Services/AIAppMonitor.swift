@@ -57,7 +57,12 @@ class AIAppMonitor: ObservableObject {
         "org.pytorch.pytorch": "PyTorch",
         "org.tensorflow.tensorflow": "TensorFlow",
         "com.automatic1111.stable-diffusion-webui": "Stable Diffusion WebUI",
-        "com.comfyui.comfyui": "ComfyUI"
+        "com.comfyui.comfyui": "ComfyUI",
+        // QoderWork 和 Qoder AI 编程助手
+        "com.qoderwork.app": "QoderWork",
+        "com.qoder.app": "Qoder",
+        "com.qoderwork.qoderwork": "QoderWork",
+        "com.qoder.qoder": "Qoder"
     ]
     
     // MARK: - Initialization

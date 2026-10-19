@@ -90,6 +90,8 @@ swift run
 - ✅ LM Studio
 - ✅ ChatGPT
 - ✅ Claude
+- ✅ **QoderWork** - AI 编程助手
+- ✅ **Qoder** - AI 编程助手
 - ✅ PyTorch
 - ✅ TensorFlow
 

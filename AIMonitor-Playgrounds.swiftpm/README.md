@@ -67,6 +67,8 @@ swift run
 - ✅ **LM Studio** - 本地模型运行环境
 - ✅ **ChatGPT** - OpenAI 官方客户端
 - ✅ **Claude** - Anthropic 官方客户端
+- ✅ **QoderWork** - AI 编程助手
+- ✅ **Qoder** - AI 编程助手
 - ✅ **PyTorch** - 深度学习框架
 - ✅ **TensorFlow** - 机器学习框架
 

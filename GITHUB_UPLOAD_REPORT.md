@@ -127,6 +127,8 @@ cd mac_ai_monitor
 - ✅ LM Studio
 - ✅ ChatGPT App
 - ✅ Claude App
+- ✅ **QoderWork** - AI 编程助手
+- ✅ **Qoder** - AI 编程助手
 - ✅ PyTorch
 - ✅ TensorFlow
 
